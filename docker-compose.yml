@@ -6,10 +6,64 @@ services:
     build:
       context: .
       dockerfile: containers/python/Dockerfile
+      # args:
+      #   - CHROME_DRIVER_URL=https://chromedriver.storage.googleapis.com/LATEST_RELEASE
+      #   - FIREFOX_DRIVER_URL=https://github.com/mozilla/geckodriver/releases/latest/download/geckodriver-v0.30.0-linux64.tar.gz
+      #   - EDGE_DRIVER_URL=https://msedgedriver.azureedge.net/latest/edgedriver_linux64.zip
     volumes:
       - ./application:/code
     ports:
       - "8000:8000"
       # デバッグ用ポート
       - "8080:8080"
+    environment:
+      - SELENIUM_HUB_HOST=selenium-hub
+      - SELENIUM_HUB_PORT=4444
     tty: true
+
+  chrome:
+    image: selenium/node-chrome:dev
+    container_name: selenium-chrome
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    volumes:
+      - ./drivers/chromedriver:/usr/local/bin/chromedriver
+
+  edge:
+    image: selenium/node-edge:dev
+    container_name: selenium-edge
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    volumes:
+      - ./drivers/edgedriver:/usr/local/bin/edgedriver
+
+  firefox:
+    image: selenium/node-firefox:dev
+    container_name: selenium-firefox
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    volumes:
+      - ./drivers/geckodriver:/usr/local/bin/geckodriver
+
+  selenium-hub:
+    image: selenium/hub:latest
+    container_name: selenium-hub
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
