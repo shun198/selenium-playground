@@ -9,16 +9,22 @@ COPY application/pyproject.toml /code/
 RUN pip install --upgrade pip && pip install poetry
 RUN poetry install
 
-# # Chrome Driverのインストール
-# RUN apt-get update && apt-get install -y wget unzip
-# RUN wget -qO /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/LATEST_RELEASE/chromedriver_linux64.zip \
-#     && unzip /tmp/chromedriver.zip -d /usr/local/bin \
-#     && rm /tmp/chromedriver.zip
+# Chrome Driverのインストール
+# https://chromedriver.chromium.org/downloads
+RUN apt-get update && apt-get install -y wget unzip
+RUN wget -qO /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/113.0.5672.63/chromedriver_linux64.zip \
+    && unzip /tmp/chromedriver.zip -d /usr/local/bin \
+    && rm /tmp/chromedriver.zip
 
-# # Edge Driverのインストール
-# RUN wget -qO /tmp/edgedriver.zip https://msedgedriver.azureedge.net/latest/edgedriver_linux64.zip \
-#     && unzip /tmp/edgedriver.zip -d /usr/local/bin \
-#     && rm /tmp/edgedriver.zip
+# Edge Driverのインストール
+# https://developer.microsoft.com/ja-jp/microsoft-edge/tools/webdriver/
+RUN wget -qO /tmp/edgedriver.zip https://msedgedriver.azureedge.net/114.0.1823.18/edgedriver_linux64.zip \
+    && unzip /tmp/edgedriver.zip -d /usr/local/bin \
+    && rm /tmp/edgedriver.zip
 
-# # Firefox Driverのインストール
+# Firefox Driverのインストール
+# https://github.com/mozilla/geckodriver/releases
 # RUN apt-get install -y firefox-geckodriver
+RUN wget -qO /tmp/geckodriver.tar https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux32.tar.gz \
+    && tar -xvzf /tmp/geckodriver.tar -C /usr/local/bin \
+    && rm /tmp/geckodriver.tar

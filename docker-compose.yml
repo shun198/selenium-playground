@@ -1,3 +1,4 @@
+# https://github.com/SeleniumHQ/docker-selenium
 version: "3.9"
 
 services:
@@ -6,10 +7,6 @@ services:
     build:
       context: .
       dockerfile: containers/python/Dockerfile
-      # args:
-      #   - CHROME_DRIVER_URL=https://chromedriver.storage.googleapis.com/LATEST_RELEASE
-      #   - FIREFOX_DRIVER_URL=https://github.com/mozilla/geckodriver/releases/latest/download/geckodriver-v0.30.0-linux64.tar.gz
-      #   - EDGE_DRIVER_URL=https://msedgedriver.azureedge.net/latest/edgedriver_linux64.zip
     volumes:
       - ./application:/code
     ports:
